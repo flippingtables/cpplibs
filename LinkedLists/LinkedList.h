@@ -32,7 +32,6 @@ public:
   void add(const size_t index, const int data);
   int get(size_t index) const;
   bool contains(const int data) const;
-  /*Node* search(int data);*/
   bool remove(const int data);
   bool remove(const size_t index);
   void clear();
