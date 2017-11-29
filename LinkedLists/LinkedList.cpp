@@ -1,13 +1,15 @@
 #include "stdafx.h"
-#include "LinkedList.h"
+//#include "LinkedList.h"
 #include <sstream>
 
-LinkedList::LinkedList() : _head(nullptr), _tail(nullptr), _size(0) {
-
-}
-
+LinkedList::LinkedList() : _head(nullptr), _tail(nullptr), _size(0) { }
 
 LinkedList::~LinkedList() {
+  clear();
+  delete _head;
+  delete _tail;
+  _head = nullptr;
+  _tail = nullptr;
 }
 
 void LinkedList::add(const int data) {
@@ -26,8 +28,6 @@ void LinkedList::add(const int data) {
 }
 
 void LinkedList::add(const size_t index, const int data) {
-
-
   if (empty()) {
     add(data);
     return;

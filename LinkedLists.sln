@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkedLists", "LinkedLists\LinkedLists.vcxproj", "{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinkedListTest", "LinkedListTest\LinkedListTest.vcxproj", "{48F4BCA9-AB62-463A-8579-201A36F4EEE1}"
 EndProject
 Global
@@ -15,14 +13,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Debug|x64.ActiveCfg = Debug|x64
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Debug|x64.Build.0 = Debug|x64
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Debug|x86.ActiveCfg = Debug|Win32
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Debug|x86.Build.0 = Debug|Win32
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Release|x64.ActiveCfg = Release|x64
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Release|x64.Build.0 = Release|x64
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Release|x86.ActiveCfg = Release|Win32
-		{7DDB8BB4-46E4-49F6-8B1E-A6D765EB9C9D}.Release|x86.Build.0 = Release|Win32
 		{48F4BCA9-AB62-463A-8579-201A36F4EEE1}.Debug|x64.ActiveCfg = Debug|x64
 		{48F4BCA9-AB62-463A-8579-201A36F4EEE1}.Debug|x64.Build.0 = Debug|x64
 		{48F4BCA9-AB62-463A-8579-201A36F4EEE1}.Debug|x86.ActiveCfg = Debug|Win32
