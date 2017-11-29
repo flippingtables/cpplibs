@@ -3,25 +3,26 @@
 #include <sstream>
 #include <string>
 
+template <typename T>
 class LinkedList;
 
+template <typename T>
 class Node {
 public:
-  int data;
-  Node* _next;
-  Node* _prev;
-  friend LinkedList;
-  Node(int data) : data(data), _next(nullptr), _prev(nullptr) {}
-  Node& Node::operator =(const Node &element) { data = element.data; return *this; }
-  Node& Node::operator =(const Node *element) { data = element->data; return *this; }
+  T data;
+  Node<T>* _next;
+  Node<T>* _prev;
+  friend LinkedList<T>;
+  Node(const T data);
+  Node<T>& operator =(const Node<T>&element);
+  Node<T>& operator =(const Node<T>*element);
 };
 
+template <typename T>
 class LinkedList {
 private:
-
-
-private:
-  Node *_head, *_tail;
+  Node<T> *_head;
+  Node<T> *_tail;
   size_t _size;
 public:
   
@@ -29,26 +30,41 @@ public:
   
   ~LinkedList();
 
-  void add(const int data);
-  void add(const size_t index, const int data);
-  int get(size_t index) const;
-  bool contains(const int data) const;
-  bool remove(const int data);
-  bool remove(const size_t index);
+  void add(const T data);
+  void add(const size_t index, const T data);
+  T get(size_t index) const;
+  bool contains(const T data) const;
+  bool remove(const T data);
+  T remove(const size_t index);
   void clear();
   bool empty() const;
   size_t size() const;
   std::string str() const;
 
-  Node& LinkedList::operator [](size_t index) const;
+  Node<T>& operator[](size_t index) const;
 };
 
 /*
 ================================= Implementation of LinkedList =================================
 */
-LinkedList::LinkedList() : _head(nullptr), _tail(nullptr), _size(0) {}
+template <typename T>
+Node<T>::Node(const T data) : data(data), _next(nullptr), _prev(nullptr) {}
 
-LinkedList::~LinkedList() {
+template <typename T>
+Node<T>& Node<T>::operator =(const Node<T>& element) { data = element.data; return *this; }
+
+template <typename T>
+Node<T>& Node<T>::operator =(const Node<T>* element) { data = element->data; return *this; }
+/*
+================================= Implementation of LinkedList =================================
+*/
+
+template <typename T>
+LinkedList<T>::LinkedList() : _head(nullptr), _tail(nullptr), _size(0) {}
+
+
+template <typename T>
+LinkedList<T>::~LinkedList() {
   clear();
   delete _head;
   delete _tail;
@@ -56,8 +72,10 @@ LinkedList::~LinkedList() {
   _tail = nullptr;
 }
 
-void LinkedList::add(const int data) {
-  Node* newNode = new Node(data);
+
+template <typename T>
+void LinkedList<T>::add(const T data) {
+  Node<T>* newNode = new Node<T>(data);
 
   if (!empty()) {
     newNode->_prev = _tail;
@@ -71,19 +89,21 @@ void LinkedList::add(const int data) {
   ++_size;
 }
 
-void LinkedList::add(const size_t index, const int data) {
 
+template <typename T>
+void LinkedList<T>::add(const size_t index, const T data) {
 
   if (empty()) {
     add(data);
     return;
   }
+
   if (index >= 0 && index < size()) {
-    Node* node = _head;
+    Node<T>* node = _head;
     for (size_t i = 0; i < index; ++i) {
       node = node->_next;
     }
-    Node* newNode = new Node(data);
+    Node<T>* newNode = new Node<T>(data);
     newNode->_next = node;
     newNode->_prev = node->_prev;
     if (node->_prev != nullptr) {
@@ -103,9 +123,10 @@ void LinkedList::add(const size_t index, const int data) {
   }
 }
 
-int LinkedList::get(size_t index) const {
+template <typename T>
+T LinkedList<T>::get(size_t index) const {
   if (index >= 0 && index < size()) {
-    Node* node = _head;
+    Node<T>* node = _head;
     for (size_t i = 0; i < index; ++i) {
       node = node->_next;
     }
@@ -117,9 +138,10 @@ int LinkedList::get(size_t index) const {
   return 0;
 }
 
-bool LinkedList::contains(const int data) const {
+template <typename T>
+bool LinkedList<T>::contains(const T data) const {
 
-  Node* node = _head;
+  Node<T> *node = _head;
   for (size_t i = 0; i < size(); ++i) {
     if (node->data == data) {
       return true;
@@ -129,9 +151,10 @@ bool LinkedList::contains(const int data) const {
   return false;
 }
 
-Node& LinkedList::operator[](size_t index) const {
+template <typename T>
+Node<T>& LinkedList<T>::operator[](size_t index) const {
   if (index >= 0 && index < size()) {
-    Node* node = _head;
+    Node<T> *node = _head;
     for (size_t i = 0; i < index; ++i) {
       node = node->_next;
     }
@@ -143,8 +166,9 @@ Node& LinkedList::operator[](size_t index) const {
 
 }
 
-bool LinkedList::remove(const int data) {
-  Node *node = _head;
+template <typename T>
+bool LinkedList<T>::remove(const T data) {
+  Node<T> *node = _head;
   bool isDeleted = false;
   while (node != nullptr) {
     if (node->data != data) {
@@ -156,7 +180,7 @@ bool LinkedList::remove(const int data) {
       if (_tail == node && node->_prev != nullptr) _tail = node->_prev;
       if (_head == node && node->_next != nullptr) _head = node->_next;
       if (_head == _tail && _tail == node) _head = _tail = nullptr;
-      Node *tmp = node->_next;
+      Node<T> *tmp = node->_next;
       node->_next = nullptr;
       node->_prev = nullptr;
       node = tmp;
@@ -169,9 +193,10 @@ bool LinkedList::remove(const int data) {
   return false;
 }
 
-bool LinkedList::remove(const size_t index) {
+template <typename T>
+T LinkedList<T>::remove(const size_t index) {
   if (index >= 0 && index < size()) {
-    Node *node = _head;
+    Node<T> *node = _head;
     for (size_t i = 0; i < index; ++i)
       node = node->_next;
     if (node->_prev != nullptr) node->_prev->_next = node->_next;
@@ -190,9 +215,10 @@ bool LinkedList::remove(const size_t index) {
 }
 
 
-void LinkedList::clear() {
+template <typename T>
+void LinkedList<T>::clear() {
   if (!empty()) {
-    Node *node = _tail;
+    Node<T> *node = _tail;
     while (node != nullptr) {
       if (nullptr != node->_next) {
         delete node->_next;
@@ -210,18 +236,21 @@ void LinkedList::clear() {
   }
 }
 
-bool LinkedList::empty() const {
+template <typename T>
+bool LinkedList<T>::empty() const {
   return size() == 0;
 }
 
-size_t LinkedList::size() const {
+template <typename T>
+size_t LinkedList<T>::size() const {
   return _size;
 }
 
-std::string LinkedList::str() const {
+template <typename T>
+std::string LinkedList<T>::str() const {
   std::stringstream ss;
 
-  Node* tmp = _head;
+  Node<T> *tmp = _head;
   for (size_t i = 0; i < size(); ++i) {
     if (tmp == nullptr)
       break;
@@ -234,3 +263,4 @@ std::string LinkedList::str() const {
   }
   return ss.str();
 }
+
