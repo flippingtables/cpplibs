@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "LinkedList.h"
+#include <functional>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -152,5 +153,55 @@ namespace LinkedListTest
       list.add(200);
       Assert::IsTrue(true == list.contains(666));
     }
+
+    TEST_METHOD(TestIndexOfEmptyAssert) {
+      LinkedList<int> list;
+      std::function<size_t(void)> f1 = [list] { return list.indexOf(0); };
+      Assert::ExpectException<std::out_of_range>(f1);
+    }
+
+    TEST_METHOD(TestIndexOfEmptyAssertCatch) {
+      LinkedList<int> list;
+      bool exceptionThrown = false;
+      try {
+        size_t index = list.indexOf(0);
+      }
+      catch (std::out_of_range& ex) {
+        auto desc = ex.what();
+        exceptionThrown = true;
+      }
+      Assert::IsTrue(exceptionThrown);
+    }
+
+    TEST_METHOD(TestIndexOfNegative) {
+      LinkedList<int> list;
+      bool exceptionThrown = false;
+      try {
+        size_t index = list.indexOf(-1);
+      }
+      catch (std::out_of_range& ex) {
+        auto desc = ex.what();
+        exceptionThrown = true;
+      }
+      Assert::IsTrue(exceptionThrown);
+    }
+
+    TEST_METHOD(TestIndexOf) {
+      LinkedList<int> list;
+      list.add(100);
+      list.add(666);
+      list.add(200);
+      Assert::IsTrue(1 == list.indexOf(666));
+    }
+
+    TEST_METHOD(TestIndexOfNotFound) {
+      LinkedList<int> list;
+      list.add(100);
+      list.add(666);
+      list.add(200);
+      Assert::IsTrue(0 == list.indexOf(777));
+    }
+
+
 	};
 }

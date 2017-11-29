@@ -13,7 +13,7 @@ public:
   Node<T>* _next;
   Node<T>* _prev;
   friend LinkedList<T>;
-  Node(const T data);
+  Node(const T& data);
   Node<T>& operator =(const Node<T>&element);
   Node<T>& operator =(const Node<T>*element);
 };
@@ -30,15 +30,16 @@ public:
   
   ~LinkedList();
 
-  void add(const T data);
-  void add(const size_t index, const T data);
+  void add(const T& data);
+  void add(const size_t index, const T& data);
   T get(size_t index) const;
-  bool contains(const T data) const;
-  bool remove(const T data);
+  bool contains(const T& data) const;
+  bool remove(const T& data);
   T remove(const size_t index);
   void clear();
   bool empty() const;
   size_t size() const;
+  size_t indexOf(const T& data) const;
   std::string str() const;
 
   Node<T>& operator[](size_t index) const;
@@ -48,7 +49,7 @@ public:
 ================================= Implementation of LinkedList =================================
 */
 template <typename T>
-Node<T>::Node(const T data) : data(data), _next(nullptr), _prev(nullptr) {}
+Node<T>::Node(const T& data) : data(data), _next(nullptr), _prev(nullptr) {}
 
 template <typename T>
 Node<T>& Node<T>::operator =(const Node<T>& element) { data = element.data; return *this; }
@@ -74,7 +75,7 @@ LinkedList<T>::~LinkedList() {
 
 
 template <typename T>
-void LinkedList<T>::add(const T data) {
+void LinkedList<T>::add(const T& data) {
   Node<T>* newNode = new Node<T>(data);
 
   if (!empty()) {
@@ -91,7 +92,7 @@ void LinkedList<T>::add(const T data) {
 
 
 template <typename T>
-void LinkedList<T>::add(const size_t index, const T data) {
+void LinkedList<T>::add(const size_t index, const T& data) {
 
   if (empty()) {
     add(data);
@@ -139,7 +140,7 @@ T LinkedList<T>::get(size_t index) const {
 }
 
 template <typename T>
-bool LinkedList<T>::contains(const T data) const {
+bool LinkedList<T>::contains(const T& data) const {
 
   Node<T> *node = _head;
   for (size_t i = 0; i < size(); ++i) {
@@ -167,7 +168,7 @@ Node<T>& LinkedList<T>::operator[](size_t index) const {
 }
 
 template <typename T>
-bool LinkedList<T>::remove(const T data) {
+bool LinkedList<T>::remove(const T& data) {
   Node<T> *node = _head;
   bool isDeleted = false;
   while (node != nullptr) {
@@ -250,17 +251,37 @@ template <typename T>
 std::string LinkedList<T>::str() const {
   std::stringstream ss;
 
-  Node<T> *tmp = _head;
+  Node<T> *node = _head;
   for (size_t i = 0; i < size(); ++i) {
-    if (tmp == nullptr)
+    if (node == nullptr)
       break;
 
-    ss << tmp->data;
-    if (tmp->_next) {
+    ss << node->data;
+    if (node->_next) {
       ss << " ";
     }
-    tmp = tmp->_next;
+    node = node->_next;
   }
   return ss.str();
 }
 
+template <typename T>
+size_t LinkedList<T>::indexOf(const T& data) const {
+
+  Node<T> *node = _head;
+
+  if (!empty()) {
+
+    for (size_t indexOf = 0; indexOf < size(); ++indexOf) {
+      if (data == node->data) {
+        return indexOf;
+      }
+      node = node->_next;
+    }
+  }
+  else {
+    throw std::out_of_range("LinkedList :: indexOf(index)");
+  }
+  return 0;
+  
+}
