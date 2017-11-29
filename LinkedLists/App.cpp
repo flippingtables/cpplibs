@@ -98,7 +98,6 @@ int main() {
     ll.add(i);
   }
   ll.remove(5);
-  ll.print();
   return 0;
 }
 

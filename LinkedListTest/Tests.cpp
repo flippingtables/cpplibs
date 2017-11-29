@@ -106,7 +106,6 @@ namespace LinkedListTest
 
     TEST_METHOD(TestOperatorSquare) {
       LinkedList list;
-      size_t index = 0;
       list.add(666);
       Node n = list[0];
       Assert::IsTrue(n._next == n._prev);
@@ -114,7 +113,6 @@ namespace LinkedListTest
 
     TEST_METHOD(TestOperatorSquareNextPrev) {
       LinkedList list;
-      size_t index = 0;
       list.add(100);
       list.add(666);
       list.add(200);
@@ -125,7 +123,6 @@ namespace LinkedListTest
 
     TEST_METHOD(TestOperatorSquarePrevNULL) {
       LinkedList list;
-      size_t index = 0;
       list.add(100);
       list.add(666);
       list.add(200);
@@ -143,6 +140,17 @@ namespace LinkedListTest
       Assert::IsTrue(n._next == nullptr);
     }
 
-    
+    TEST_METHOD(TestContainsEmpty) {
+      LinkedList list;      
+      Assert::IsTrue(false == list.contains(0));
+    }
+
+    TEST_METHOD(TestContainsNotEmpty) {
+      LinkedList list;
+      list.add(100);
+      list.add(666);
+      list.add(200);
+      Assert::IsTrue(true == list.contains(666));
+    }
 	};
 }

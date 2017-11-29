@@ -11,7 +11,7 @@ LinkedList::LinkedList() : _head(nullptr), _tail(nullptr), _size(0) {
 LinkedList::~LinkedList() {
 }
 
-void LinkedList::add(int data) {
+void LinkedList::add(const int data) {
   Node* newNode = new Node(data);
 
   if (!empty()) {
@@ -26,7 +26,7 @@ void LinkedList::add(int data) {
   ++_size;
 }
 
-void LinkedList::add(const size_t index, int data) {
+void LinkedList::add(const size_t index, const int data) {
 
 
   if (empty()) {
@@ -72,17 +72,16 @@ int LinkedList::get(size_t index) const {
   return 0;
 }
 
-void LinkedList::print() const {
-
-  Node* list = _head;
-
-  while (list) {
-    char buffer[100];
-    sprintf_s(buffer, "%d ", list->data);
-    OutputDebugStringA(buffer);
-    list = list->_next;
+bool LinkedList::contains(const int data) const {
+  
+  Node* node = _head;
+  for (size_t i = 0; i < size(); ++i) {
+    if (node->data == data) {
+      return true;
+    }
+    node = node->_next;
   }
-  OutputDebugStringA("\r\n");
+  return false;
 }
 
 Node& LinkedList::operator[](size_t index) const {

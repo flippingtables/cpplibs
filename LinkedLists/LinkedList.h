@@ -28,9 +28,10 @@ public:
   
   ~LinkedList();
 
-  void add(int data);
-  void add(const size_t index, int data);
+  void add(const int data);
+  void add(const size_t index, const int data);
   int get(size_t index) const;
+  bool contains(const int data) const;
   /*Node* search(int data);*/
   bool remove(const int data);
   bool remove(const size_t index);
@@ -38,7 +39,6 @@ public:
   bool empty() const;
   size_t size() const;
   std::string str() const;
-  void print() const;
 
   Node& LinkedList::operator [](size_t index) const;
 };
