@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "LinkedList.h"
-#include <Windows.h>
 #include <sstream>
 
 LinkedList::LinkedList() : _head(nullptr), _tail(nullptr), _size(0) {
@@ -73,7 +72,7 @@ int LinkedList::get(size_t index) const {
 }
 
 bool LinkedList::contains(const int data) const {
-  
+
   Node* node = _head;
   for (size_t i = 0; i < size(); ++i) {
     if (node->data == data) {
