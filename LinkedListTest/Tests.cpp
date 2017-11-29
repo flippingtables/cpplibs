@@ -106,7 +106,7 @@ public:
   TEST_METHOD(TestOperatorSquare) {
     LinkedList<int> list;
     list.add(666);
-    Node<int> n = list[0];
+    Node<int> n = *list[0];
     Assert::IsTrue(n._next == n._prev);
   }
 
@@ -115,7 +115,7 @@ public:
     list.add(100);
     list.add(666);
     list.add(200);
-    Node<int> n = list[1];
+    Node<int> n = *list[1];
     Assert::IsTrue(n._prev->data == 100);
     Assert::IsTrue(n._next->data == 200);
   }
@@ -125,7 +125,7 @@ public:
     list.add(100);
     list.add(666);
     list.add(200);
-    Node<int> n = list[0];
+    Node<int> n = *list[0];
     Assert::IsTrue(n._prev == nullptr);
   }
 
@@ -135,7 +135,7 @@ public:
     list.add(100);
     list.add(666);
     list.add(200);
-    Node<int> n = list[2];
+    Node<int> n = *list[2];
     Assert::IsTrue(n._next == nullptr);
   }
 
@@ -200,6 +200,54 @@ public:
     Assert::IsTrue(0 == list.indexOf(777));
   }
 
+  TEST_METHOD(TestSwap) {
+    LinkedList<int> list;
+    list.add(1);
+    list.add(3);
+    list.add(2);
+    list.swap(1, 2);
+    std::string expected("1 2 3");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestSort) {
+    LinkedList<int> list;
+    list.add(1);
+    list.add(3);
+    list.add(2);
+    list.add(9);
+    list.add(4);
+    list.sort();
+    std::string expected("1 2 3 4 9");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestSort1) {
+    LinkedList<int> list;
+    list.add(2);
+    list.add(1);
+    list.sort();
+    std::string expected("1 2");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestSort2) {
+    LinkedList<int> list;
+    list.add(1);
+    list.sort();
+    std::string expected("1");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestSortLetters) {
+    LinkedList<std::string> list;
+    list.add("a");
+    list.add("c");
+    list.add("b");
+    list.sort();
+    std::string expected("a b c");
+    Assert::AreEqual(expected, list.str());
+  }
 
   };
 }

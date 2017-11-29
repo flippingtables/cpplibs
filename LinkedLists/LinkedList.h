@@ -37,12 +37,25 @@ public:
   bool remove(const T& data);
   T remove(const size_t index);
   void clear();
+  
+  // Sorting related
+  void sort();
+  Node<T>* lastNode();
+  void swap(size_t l, size_t r);
+  // Sorting related END
+
   bool empty() const;
   size_t size() const;
   size_t indexOf(const T& data) const;
   std::string str() const;
-
+  
   Node<T>& operator[](size_t index) const;
+  Node<T>* operator[](size_t index);
+
+private:
+  void _quickSort(Node<T>* l, Node<T>* h);
+  void swap(Node<T>* l, Node<T>* r);
+  Node<T>* partition(Node<T>* l, Node<T>* h);
 };
 
 /*
@@ -164,7 +177,20 @@ Node<T>& LinkedList<T>::operator[](size_t index) const {
   else {
     throw std::out_of_range("LinkedList :: operator [index]");
   }
+}
 
+template <typename T>
+Node<T>* LinkedList<T>::operator[](size_t index) {
+  if (index >= 0 && index < size()) {
+    Node<T> *node = _head;
+    for (size_t i = 0; i < index; ++i) {
+      node = node->_next;
+    }
+    return node;
+  }
+  else {
+    throw std::out_of_range("LinkedList :: operator [index]");
+  }
 }
 
 template <typename T>
@@ -284,4 +310,63 @@ size_t LinkedList<T>::indexOf(const T& data) const {
   }
   return 0;
 
+}
+template <typename T>
+void LinkedList<T>::swap(Node<T>* a, Node<T>* b) {
+  Node<T> c = *a;
+  *a = *b;
+  *b = c;
+}
+
+template <typename T>
+void LinkedList<T>::swap(size_t l, size_t r) {
+  Node<T>* lNode = (*this)[l];
+  Node<T>* rNode = (*this)[r];
+  swap(lNode, rNode);
+}
+
+// A utility function to find last node of linked list
+template <typename T>
+Node<T>* LinkedList<T>::lastNode() {
+  Node<T>* node = _head;
+  while (node && node->_next)
+    node = node->_next;
+  return node;
+}
+
+template <typename T>
+Node<T>* LinkedList<T>::partition(Node<T>*l, Node<T>* h) {
+  // set pivot as h element
+  Node<T> *pivot = h;
+
+  // similar to i = l-1 for array implementation
+  Node<T> *i = l->_prev;
+
+  // Similar to "for (int j = l; j <= h- 1; j++)"
+  for (Node<T> *j = l; j != h; j = j->_next) {
+    if (j->data <= pivot->data) {
+      // Similar to i++ for array
+      i = (i == nullptr) ? l : i->_next;
+
+      swap(i, j);
+    }
+  }
+  i = (i == nullptr) ? l : i->_next; // Similar to i++
+  swap(i, h);
+  return i;
+}
+
+template <typename T>
+void LinkedList<T>::_quickSort(Node<T>*l, Node<T>* h) {
+  if (h != nullptr && l != h && l != h->_next) {
+    Node<T> *p = partition(l, h);
+    _quickSort(l, p->_prev);
+    _quickSort(p->_next, h);
+  }
+}
+
+template <typename T>
+void LinkedList<T>::sort() {
+  Node<T>* last = lastNode();
+  _quickSort(_head, last);
 }
