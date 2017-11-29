@@ -25,9 +25,9 @@ private:
   Node<T> *_tail;
   size_t _size;
 public:
-  
+
   LinkedList();
-  
+
   ~LinkedList();
 
   void add(const T& data);
@@ -283,5 +283,5 @@ size_t LinkedList<T>::indexOf(const T& data) const {
     throw std::out_of_range("LinkedList :: indexOf(index)");
   }
   return 0;
-  
+
 }
