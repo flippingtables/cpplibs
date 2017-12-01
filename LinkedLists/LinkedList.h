@@ -14,8 +14,8 @@ public:
   Node<T>* _prev;
   friend LinkedList<T>;
   Node(const T& data);
-  Node<T>& operator =(const Node<T>&element);
-  Node<T>& operator =(const Node<T>*element);
+  Node<T>& operator =(const Node<T>& element);
+  Node<T>& operator =(const Node<T>* element);
 };
 
 template <typename T>
@@ -31,26 +31,26 @@ public:
   ~LinkedList();
 
   void add(const T& data);
-  void add(const size_t index, const T& data);
-  T get(size_t index) const;
+  void add(const size_t& index, const T& data);
+  T get(const size_t& index) const;
   bool contains(const T& data) const;
   bool remove(const T& data);
-  T remove(const size_t index);
+  T remove(const size_t& index);
   void clear();
-  
+
   // Sorting related
   void sort();
   Node<T>* lastNode();
-  void swap(size_t l, size_t r);
+  void swap(const size_t& l, const size_t& r);
   // Sorting related END
 
   bool empty() const;
   size_t size() const;
   size_t indexOf(const T& data) const;
   std::string str() const;
-  
-  Node<T>& operator[](size_t index) const;
-  Node<T>* operator[](size_t index);
+
+  Node<T>& operator[](const size_t& index) const;
+  Node<T>* operator[](const size_t& index);
 
 private:
   void _quickSort(Node<T>* l, Node<T>* h);
@@ -76,7 +76,6 @@ Node<T>& Node<T>::operator =(const Node<T>* element) { data = element->data; ret
 template <typename T>
 LinkedList<T>::LinkedList() : _head(nullptr), _tail(nullptr), _size(0) {}
 
-
 template <typename T>
 LinkedList<T>::~LinkedList() {
   clear();
@@ -85,7 +84,6 @@ LinkedList<T>::~LinkedList() {
   _head = nullptr;
   _tail = nullptr;
 }
-
 
 template <typename T>
 void LinkedList<T>::add(const T& data) {
@@ -98,15 +96,12 @@ void LinkedList<T>::add(const T& data) {
   }
   else {
     _head = _tail = newNode;
-
   }
   ++_size;
 }
 
-
 template <typename T>
-void LinkedList<T>::add(const size_t index, const T& data) {
-
+void LinkedList<T>::add(const size_t& index, const T& data) {
   if (empty()) {
     add(data);
     return;
@@ -138,7 +133,7 @@ void LinkedList<T>::add(const size_t index, const T& data) {
 }
 
 template <typename T>
-T LinkedList<T>::get(size_t index) const {
+T LinkedList<T>::get(const size_t& index) const {
   if (index >= 0 && index < size()) {
     Node<T>* node = _head;
     for (size_t i = 0; i < index; ++i) {
@@ -154,7 +149,6 @@ T LinkedList<T>::get(size_t index) const {
 
 template <typename T>
 bool LinkedList<T>::contains(const T& data) const {
-
   Node<T> *node = _head;
   for (size_t i = 0; i < size(); ++i) {
     if (node->data == data) {
@@ -166,7 +160,7 @@ bool LinkedList<T>::contains(const T& data) const {
 }
 
 template <typename T>
-Node<T>& LinkedList<T>::operator[](size_t index) const {
+Node<T>& LinkedList<T>::operator[](const size_t& index) const {
   if (index >= 0 && index < size()) {
     Node<T> *node = _head;
     for (size_t i = 0; i < index; ++i) {
@@ -180,7 +174,7 @@ Node<T>& LinkedList<T>::operator[](size_t index) const {
 }
 
 template <typename T>
-Node<T>* LinkedList<T>::operator[](size_t index) {
+Node<T>* LinkedList<T>::operator[](const size_t& index) {
   if (index >= 0 && index < size()) {
     Node<T> *node = _head;
     for (size_t i = 0; i < index; ++i) {
@@ -221,7 +215,7 @@ bool LinkedList<T>::remove(const T& data) {
 }
 
 template <typename T>
-T LinkedList<T>::remove(const size_t index) {
+T LinkedList<T>::remove(const size_t& index) {
   if (index >= 0 && index < size()) {
     Node<T> *node = _head;
     for (size_t i = 0; i < index; ++i)
@@ -240,7 +234,6 @@ T LinkedList<T>::remove(const size_t index) {
     throw std::out_of_range("LinkedList :: remove(index)");
   return false;
 }
-
 
 template <typename T>
 void LinkedList<T>::clear() {
@@ -293,11 +286,9 @@ std::string LinkedList<T>::str() const {
 
 template <typename T>
 size_t LinkedList<T>::indexOf(const T& data) const {
-
   Node<T> *node = _head;
 
   if (!empty()) {
-
     for (size_t indexOf = 0; indexOf < size(); ++indexOf) {
       if (data == node->data) {
         return indexOf;
@@ -309,17 +300,16 @@ size_t LinkedList<T>::indexOf(const T& data) const {
     throw std::out_of_range("LinkedList :: indexOf(index)");
   }
   return 0;
-
 }
 template <typename T>
-void LinkedList<T>::swap(Node<T>* a, Node<T>* b) {
-  Node<T> c = *a;
-  *a = *b;
-  *b = c;
+void LinkedList<T>::swap(Node<T>* l, Node<T>* r) {
+  Node<T> tmp = *l;
+  *l = *r;
+  *r = tmp;
 }
 
 template <typename T>
-void LinkedList<T>::swap(size_t l, size_t r) {
+void LinkedList<T>::swap(const size_t& l, const size_t& r) {
   Node<T>* lNode = (*this)[l];
   Node<T>* rNode = (*this)[r];
   swap(lNode, rNode);

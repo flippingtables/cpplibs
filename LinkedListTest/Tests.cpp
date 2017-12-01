@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "CppUnitTest.h"
+
 #include "LinkedList.h"
-#include <functional>
+
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
