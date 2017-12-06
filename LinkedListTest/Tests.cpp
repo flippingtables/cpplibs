@@ -9,21 +9,21 @@ namespace LinkedListTest
 {
   TEST_CLASS(UnitTest1) {
 public:
-
+  
   TEST_METHOD(TestAdd) {
     LinkedList<int> list;
     list.add(1);
     list.add(2);
     list.add(3);
     list.add(4);
-    std::string expected("1 2 3 4");
+    std::string expected("[1, 2, 3, 4]");
     Assert::AreEqual(expected, list.str());
   }
 
   TEST_METHOD(TestAddOne) {
     LinkedList<int> list;
     list.add(1);
-    std::string expected("1");
+    std::string expected("[1]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -35,8 +35,51 @@ public:
     list.add(4);
 
     list.remove(3);
-    std::string expected("1 2 4");
+    std::string expected("[1, 2, 4]");
     Assert::AreEqual(expected, list.str());
+  }
+  
+
+  TEST_METHOD(TestRemove1) {
+    LinkedList<int> list;
+    list.add(0);
+    list.add(1);
+    list.remove((size_t)0);
+    Assert::AreEqual((size_t)1, list.size());
+  }
+
+  
+  TEST_METHOD(TestRemove2) {
+    LinkedList<int> list;
+    list.add(0);
+    list.add(1);
+    list.remove((int)0);
+    Assert::AreEqual((size_t)1, list.size());
+  }
+
+  TEST_METHOD(TestRemove3) {
+    LinkedList<int> list;
+    list.remove((size_t)0);
+    Assert::AreEqual((size_t)0, list.size());
+  }
+
+  TEST_METHOD(TestRemove4) {
+    LinkedList<int> list;
+    list.remove((size_t)2);
+    Assert::AreEqual((size_t)0, list.size());
+  }
+  
+  TEST_METHOD(TestRemove5) {
+    LinkedList<int> list;
+    list.add(0);
+    list.remove((size_t)2);
+    Assert::AreEqual((size_t)1, list.size());
+  }
+
+  TEST_METHOD(TestRemoveEmpty) {
+    LinkedList<int> list;
+    list.remove(3);
+    Assert::IsTrue(list.empty());
   }
 
   TEST_METHOD(TestRemoveAt) {
@@ -48,7 +91,7 @@ public:
 
     size_t index = 3;
     list.remove(index);
-    std::string expected("1 2 3");
+    std::string expected("[1, 2, 3]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -91,7 +134,7 @@ public:
     list.add(4);
     list.add(5);
     list.add(index, 666);
-    std::string expected("1 2 3 666 4 5");
+    std::string expected("[1, 2, 3, 666, 4, 5]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -99,7 +142,7 @@ public:
     LinkedList<int> list;
     size_t index = 0;
     list.add(index, 666);
-    std::string expected("666");
+    std::string expected("[666]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -116,8 +159,8 @@ public:
     list.add(666);
     list.add(200);
     Node<int> n = *list[1];
-    Assert::IsTrue(n._prev->data == 100);
-    Assert::IsTrue(n._next->data == 200);
+    Assert::IsTrue(n._prev->_data == 100);
+    Assert::IsTrue(n._next->_data == 200);
   }
 
   TEST_METHOD(TestOperatorSquarePrevNULL) {
@@ -152,36 +195,16 @@ public:
     Assert::IsTrue(true == list.contains(666));
   }
 
-  TEST_METHOD(TestIndexOfEmptyAssert) {
-    LinkedList<int> list;
-    std::function<size_t(void)> f1 = [list] { return list.indexOf(0); };
-    Assert::ExpectException<std::out_of_range>(f1);
-  }
-
   TEST_METHOD(TestIndexOfEmptyAssertCatch) {
     LinkedList<int> list;
-    bool exceptionThrown = false;
-    try {
-      size_t index = list.indexOf(0);
-    }
-    catch (std::out_of_range& ex) {
-      auto desc = ex.what();
-      exceptionThrown = true;
-    }
-    Assert::IsTrue(exceptionThrown);
+    size_t index = list.indexOf(0);
+    Assert::IsTrue(0 == index);
   }
 
   TEST_METHOD(TestIndexOfNegative) {
     LinkedList<int> list;
-    bool exceptionThrown = false;
-    try {
-      size_t index = list.indexOf(-1);
-    }
-    catch (std::out_of_range& ex) {
-      auto desc = ex.what();
-      exceptionThrown = true;
-    }
-    Assert::IsTrue(exceptionThrown);
+    size_t index = list.indexOf(-1);
+    Assert::IsTrue(0 == index);
   }
 
   TEST_METHOD(TestIndexOf) {
@@ -197,7 +220,8 @@ public:
     list.add(100);
     list.add(666);
     list.add(200);
-    Assert::IsTrue(0 == list.indexOf(777));
+    size_t indexof = list.indexOf(777);
+    Assert::AreEqual((size_t)0, indexof);
   }
 
   TEST_METHOD(TestSwap) {
@@ -206,7 +230,7 @@ public:
     list.add(3);
     list.add(2);
     list.swap(1, 2);
-    std::string expected("1 2 3");
+    std::string expected("[1, 2, 3]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -218,7 +242,7 @@ public:
     list.add(9);
     list.add(4);
     list.sort();
-    std::string expected("1 2 3 4 9");
+    std::string expected("[1, 2, 3, 4, 9]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -227,7 +251,7 @@ public:
     list.add(2);
     list.add(1);
     list.sort();
-    std::string expected("1 2");
+    std::string expected("[1, 2]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -235,7 +259,7 @@ public:
     LinkedList<int> list;
     list.add(1);
     list.sort();
-    std::string expected("1");
+    std::string expected("[1]");
     Assert::AreEqual(expected, list.str());
   }
 
@@ -245,9 +269,39 @@ public:
     list.add("c");
     list.add("b");
     list.sort();
-    std::string expected("a b c");
+    std::string expected("[a, b, c]");
     Assert::AreEqual(expected, list.str());
   }
+
+  TEST_METHOD(TestOut) {
+    std::ostream stream(nullptr);
+    std::stringbuf str;
+    stream.rdbuf(&str);
+
+    LinkedList<std::string> list;
+    list.add("a");
+    list.add("c");
+    list.add("b");
+    stream << list;
+    std::string expected("[a, c, b]");
+    Assert::AreEqual(expected, str.str());
+  }
+
+  TEST_METHOD(TestSpeed1) {
+    LinkedList<int> list;
+    size_t size = 1000;
+    for (int i = 0; i < size; ++i) {
+      list.add(i);
+    }
+
+    for (int i = 0; i < size; ++i) {
+      list.remove(i);
+    }
+    
+    Assert::AreEqual((size_t)0, list.size());
+  }
+
+  
 
   };
 }
