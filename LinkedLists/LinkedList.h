@@ -170,7 +170,7 @@ void LinkedList<T>::addAll(const std::initializer_list<T>& elements) {
 
 template <typename T>
 T LinkedList<T>::get(const size_t& index) const {
-  Node<T>* newNode;
+  Node<T>* newNode = nullptr;
   if (index >= 0 && index < size()) {
     Node<T>* node = head;
     for (size_t i = 0; i < index; ++i) {
