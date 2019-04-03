@@ -204,7 +204,7 @@ public:
     LinkedList<int> list;
     list.add(666);
     Node<int> n = *list[0];
-    Assert::IsTrue(n._next == n._prev);
+    Assert::IsTrue(n.next == n.prev);
   }
 
   TEST_METHOD(TestOperatorSquareNextPrev) {
@@ -213,8 +213,8 @@ public:
     list.add(666);
     list.add(200);
     Node<int> n = *list[1];
-    Assert::IsTrue(n._prev->_data == 100);
-    Assert::IsTrue(n._next->_data == 200);
+    Assert::IsTrue(n.prev->_data == 100);
+    Assert::IsTrue(n.next->_data == 200);
   }
 
   TEST_METHOD(TestOperatorSquarePrevNULL) {
@@ -223,7 +223,7 @@ public:
     list.add(666);
     list.add(200);
     Node<int> n = *list[0];
-    Assert::IsTrue(n._prev == nullptr);
+    Assert::IsTrue(n.prev == nullptr);
   }
 
   TEST_METHOD(TestOperatorSquareNextNULL) {
@@ -233,7 +233,7 @@ public:
     list.add(666);
     list.add(200);
     Node<int> n = *list[2];
-    Assert::IsTrue(n._next == nullptr);
+    Assert::IsTrue(n.next == nullptr);
   }
 
   TEST_METHOD(TestContainsEmpty) {
@@ -343,7 +343,7 @@ public:
 
   TEST_METHOD(TestSpeed1) {
     LinkedList<int> list;
-    size_t size = 1000;
+    int size = 1000;
     for (int i = 0; i < size; ++i) {
       list.add(i);
     }
