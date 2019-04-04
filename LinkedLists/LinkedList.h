@@ -1,5 +1,3 @@
-#pragma once
-
 #include <initializer_list>
 #include <iostream>
 #include <sstream>
@@ -37,9 +35,9 @@ public:
   LinkedList();
   ~LinkedList();
 
-  void add(const T& data);
-  void add(const size_t& index, const T& data);
-  void addAll(const std::initializer_list<T>& elements);
+  void insert(const T& data);
+  void insert(const size_t& index, const T& data);
+  void insertAll(const std::initializer_list<T>& elements);
   T get(const size_t& index) const;
   bool contains(const T& data) const;
   void remove(const T& data);
@@ -115,7 +113,7 @@ LinkedList<T>::~LinkedList() {
 }
 
 template <typename T>
-void LinkedList<T>::add(const T& data) {
+void LinkedList<T>::insert(const T& data) {
   Node<T>* newNode = new Node<T>(data);
 
   if (!empty()) {
@@ -130,9 +128,9 @@ void LinkedList<T>::add(const T& data) {
 }
 
 template <typename T>
-void LinkedList<T>::add(const size_t& index, const T& data) {
+void LinkedList<T>::insert(const size_t& index, const T& data) {
   if (empty()) {
-    add(data);
+    insert(data);
     return;
   }
 
@@ -162,9 +160,9 @@ void LinkedList<T>::add(const size_t& index, const T& data) {
 }
 
 template<typename T>
-void LinkedList<T>::addAll(const std::initializer_list<T>& elements) {
+void LinkedList<T>::insertAll(const std::initializer_list<T>& elements) {
   for (T& element : elements) {
-    add(element);
+    insert(element);
   }
 }
 
