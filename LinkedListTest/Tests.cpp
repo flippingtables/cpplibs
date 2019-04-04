@@ -200,6 +200,12 @@ public:
     Assert::AreEqual(expected, out);
   }
 
+  TEST_METHOD(TestAddOutSideBoundsException) {
+    LinkedList<int> list;
+    size_t index = 1;
+    Assert::ExpectException<std::exception>([&] { list.insert(index, 666); });
+  }
+
   TEST_METHOD(TestOperatorSquare) {
     LinkedList<int> list;
     list.insert(666);
