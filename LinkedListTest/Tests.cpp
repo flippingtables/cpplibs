@@ -78,8 +78,7 @@ public:
 
   TEST_METHOD(TestRemoveEmpty) {
     LinkedList<int> list;
-    list.remove(3);
-    Assert::IsTrue(list.empty());
+    Assert::ExpectException<std::exception>([&] {list.remove(3); });
   }
 
   TEST_METHOD(TestRemoveAt) {
@@ -197,7 +196,8 @@ public:
     size_t index = 0;
     list.insert(index, 666);
     std::string expected("[666]");
-    Assert::AreEqual(expected, list.str());
+    std::string out = list.str();
+    Assert::AreEqual(expected, out);
   }
 
   TEST_METHOD(TestOperatorSquare) {

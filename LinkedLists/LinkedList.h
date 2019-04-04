@@ -3,6 +3,17 @@
 #include <sstream>
 #include <string>
 
+
+class PositionException : public std::exception {
+protected:
+  std::string message;
+public:
+  PositionException(const std::string& msg) : std::exception(msg.c_str()),
+    message(msg)
+  {
+  }
+};
+
 template <typename T>
 class LinkedList;
 
@@ -47,6 +58,8 @@ public:
   void remove(const size_t& index);
   void clear();
 
+
+
   // Sorting related
   void sort();
   Node<T>* lastNode();
@@ -55,6 +68,8 @@ public:
 
   bool empty() const;
   const size_t& size() const;
+  size_t firstIndex() const;
+  size_t lastIndex() const;
   size_t indexOf(const T& data) const;
   std::string str() const;
 
@@ -155,7 +170,7 @@ void LinkedList<T>::insert(const size_t& index, const T& data) {
     ++_size;
   }
   else {
-    throw std::out_of_range("LinkedList :: add(index, value)");
+    throw PositionException("LinkedList :: add(index, value)");
   }
 }
 
@@ -168,17 +183,16 @@ void LinkedList<T>::insertAll(const std::initializer_list<T>& elements) {
 
 template <typename T>
 T LinkedList<T>::get(const size_t& index) const {
-  Node<T>* newNode = nullptr;
-  if (index >= 0 && index < size()) {
-    Node<T>* node = head;
-    for (size_t i = 0; i < index; ++i) {
-      node = node->next;
-    }
-    return node->_data;
+  if (index >= size()) {
+    throw PositionException("Index out of bounds");
   }
-  else {
-    return newNode->_data;
+  
+  Node<T>* node = head;
+  for (size_t i = 0; i < index; ++i) {
+    node = node->next;
   }
+
+  return node->_data;
 }
 
 template <typename T>
@@ -195,16 +209,15 @@ bool LinkedList<T>::contains(const T& data) const {
 
 template <typename T>
 Node<T>& LinkedList<T>::operator[](const size_t& index) const {
-  if (index >= 0 && index < size()) {
-    Node<T>* node = head;
-    for (size_t i = 0; i < index; ++i) {
-      node = node->next;
-    }
-    return *node;
+  if (index >= size()) {
+    throw PositionException("Index out of bounds");
   }
-  else {
-    return nullptr;
+
+  Node<T>* node = head;
+  for (size_t i = 0; i < index; ++i) {
+    node = node->next;
   }
+  return *node;
 }
 
 template <typename T>
@@ -227,6 +240,9 @@ void LinkedList<T>::remove(const T& data) {
   size_t indexOfData = indexOf(data);
   if (indexOfData != std::string::npos) {
     remove(indexOfData);
+  }
+  else {
+    throw PositionException("List empty, nothing to remove");
   }
 }
 
@@ -311,6 +327,20 @@ template <typename T>
 const size_t& LinkedList<T>::size() const {
   return _size;
 }
+
+template <typename T>
+size_t LinkedList<T>::firstIndex() const {
+  return 0;
+}
+
+template <typename T>
+size_t LinkedList<T>::lastIndex() const {
+  if (empty()) {
+    throw PositionException("List empty, no last Index");
+  }
+  return size() - 1;
+}
+
 
 template <typename T>
 std::string LinkedList<T>::str() const {
