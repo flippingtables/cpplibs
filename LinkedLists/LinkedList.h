@@ -59,7 +59,7 @@ public:
   void swap(const size_t &l, const size_t &r);
   // Sorting related END
 
-  bool empty() const;
+  bool isEmpty() const;
   const size_t &size() const;
   size_t firstIndex() const;
   size_t lastIndex() const;
@@ -119,7 +119,7 @@ template <typename T> LinkedList<T>::~LinkedList() { clear(); }
 template <typename T> void LinkedList<T>::insert(const T &data) {
   Node<T> *newNode = new Node<T>(data);
 
-  if (!empty()) {
+  if (!isEmpty()) {
     newNode->prev = tail;
     tail->next = newNode;
     tail = newNode;
@@ -131,33 +131,33 @@ template <typename T> void LinkedList<T>::insert(const T &data) {
 
 template <typename T>
 void LinkedList<T>::insert(const size_t &index, const T &data) {
-  if (empty()) {
+  if (index > 0 && index >= size()) {
+    throw PositionException("Index out of bounds");
+  }
+
+  if (isEmpty()) {
     insert(data);
     return;
   }
 
-  if (index >= 0 && index < size()) {
-    Node<T> *node = head;
-    for (size_t i = 0; i < index; ++i) {
-      node = node->next;
-    }
-    Node<T> *newNode = new Node<T>(data);
-    newNode->next = node;
-    newNode->prev = node->prev;
-    if (node->prev != nullptr) {
-      node->prev->next = newNode;
-    }
-    node->prev = newNode;
-    if (index == 0) {
-      head = newNode;
-    }
-    if (index == size() - 1) {
-      tail = newNode->next;
-    }
-    ++_size;
-  } else {
-    throw PositionException("LinkedList :: add(index, value)");
+  Node<T> *node = head;
+  for (size_t i = 0; i < index; ++i) {
+    node = node->next;
   }
+  Node<T> *newNode = new Node<T>(data);
+  newNode->next = node;
+  newNode->prev = node->prev;
+  if (node->prev != nullptr) {
+    node->prev->next = newNode;
+  }
+  node->prev = newNode;
+  if (index == 0) {
+    head = newNode;
+  }
+  if (index == size() - 1) {
+    tail = newNode->next;
+  }
+  ++_size;
 }
 
 template <typename T>
@@ -205,15 +205,14 @@ Node<T> &LinkedList<T>::operator[](const size_t &index) const {
 }
 
 template <typename T> Node<T> *LinkedList<T>::operator[](const size_t &index) {
-  if (index >= 0 && index < size()) {
-    Node<T> *node = head;
-    for (size_t i = 0; i < index; ++i) {
-      node = node->next;
-    }
-    return node;
-  } else {
-    return nullptr;
+  if (index >= size()) {
+    throw PositionException("Index out of bounds");
   }
+  Node<T> *node = head;
+  for (size_t i = 0; i < index; ++i) {
+    node = node->next;
+  }
+  return node;
 }
 
 template <typename T> void LinkedList<T>::remove(const T &data) {
@@ -291,7 +290,9 @@ template <typename T> void LinkedList<T>::clear() {
   head = tail = nullptr;
 }
 
-template <typename T> bool LinkedList<T>::empty() const { return size() == 0; }
+template <typename T> bool LinkedList<T>::isEmpty() const {
+  return size() == 0;
+}
 
 template <typename T> const size_t &LinkedList<T>::size() const {
   return _size;
@@ -300,7 +301,7 @@ template <typename T> const size_t &LinkedList<T>::size() const {
 template <typename T> size_t LinkedList<T>::firstIndex() const { return 0; }
 
 template <typename T> size_t LinkedList<T>::lastIndex() const {
-  if (empty()) {
+  if (isEmpty()) {
     throw PositionException("List empty, no last Index");
   }
   return size() - 1;
@@ -326,21 +327,24 @@ template <typename T> std::string LinkedList<T>::str() const {
 }
 
 template <typename T> size_t LinkedList<T>::indexOf(const T &data) const {
-  Node<T> *node = head;
-  bool found = false;
   size_t foundIndex = std::string::npos;
-  if (!empty()) {
-    for (size_t indexOf = 0; !found && indexOf < size(); ++indexOf) {
-      if (data == node->_data) {
-        foundIndex = indexOf;
-        found = true;
-      }
-      node = node->next;
-    }
+
+  if (isEmpty()) {
+    return foundIndex;
   }
 
+  Node<T> *node = head;
+
+  for (size_t indexOf = 0; indexOf < size(); ++indexOf) {
+    if (data == node->_data) {
+      foundIndex = indexOf;
+      break;
+    }
+    node = node->next;
+  }
   return foundIndex;
 }
+
 template <typename T> void LinkedList<T>::swap(Node<T> *l, Node<T> *r) {
   Node<T> tmp = *l;
   *l = *r;
