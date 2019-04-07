@@ -471,6 +471,53 @@ public:
     Assert::AreEqual(expected, list2.str());
   }
 
+  TEST_METHOD(TestFindOnList1) {
+    LinkedList<std::string> l;
+    l.insert("1");
+    l.insert("3");
+    l.insert("4");
+    l.insert("2");
+
+    auto it = std::find(l.begin(), l.end(), "4");
+
+    Assert::IsNotNull(&it);
+  }
+
+  TEST_METHOD(TestFindOnList2) {
+    LinkedList<std::string> l;
+    l.insert("1");
+    l.insert("3");
+    l.insert("4");
+    l.insert("2");
+
+    auto it = std::find(l.begin(), l.end(), "5");
+    bool isEqual = it == l.end();
+    Assert::AreEqual(isEqual, true);
+  }
+
+  TEST_METHOD(TestFindOnList3) {
+    LinkedList<int> l;
+    l.insert(1);
+    l.insert(2);
+    l.insert(3);
+    l.insert(4);
+
+    auto it = std::find(l.cbegin(), l.cend(), 5);
+    bool isEqual = l.cend() == it;
+    Assert::AreEqual(isEqual, true);
+  }
+
+  TEST_METHOD(TestFindOnList4) {
+    LinkedList<int> l;
+    l.insert(1);
+    l.insert(2);
+    l.insert(3);
+    l.insert(4);
+
+    auto it = std::find(l.cbegin(), l.cend(), 3);
+    bool isEqual = l.cend() != it;
+    Assert::AreEqual(isEqual, true);
+  }
 
   };
 }

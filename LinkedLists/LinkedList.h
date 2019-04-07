@@ -38,50 +38,83 @@ private:
   size_t _size;
 
 public:
-
-  class Iterator
-  {
+  class iterator {
   public:
-    Iterator() noexcept :
-      m_pCurrentNode(m_spRoot) { }
+    iterator() noexcept : m_pCurrentNode(m_spRoot) {}
 
-    Iterator(const Node<T>* pNode) noexcept :
-      m_pCurrentNode(pNode) { }
+    iterator(const Node<T> *pNode) noexcept : m_pCurrentNode(pNode) {}
 
-    Iterator& operator=(Node<T>* pNode)
-    {
+    iterator &operator=(Node<T> *pNode) {
       this->m_pCurrentNode = pNode;
       return *this;
     }
 
-    // Prefix ++ overload 
-    Iterator& operator++()
-    {
+    // Prefix ++ overload
+    iterator &operator++() {
       if (m_pCurrentNode)
         m_pCurrentNode = m_pCurrentNode->next;
       return *this;
     }
 
-    // Postfix ++ overload 
-    Iterator operator++(int)
-    {
-      Iterator iterator = *this;
-      ++* this;
+    // Postfix ++ overload
+    iterator operator++(int) {
+      iterator iterator = *this;
+      ++*this;
       return iterator;
     }
 
-    bool operator!=(const Iterator& iterator)
-    {
+    bool operator!=(const iterator &iterator) {
       return m_pCurrentNode != iterator.m_pCurrentNode;
     }
 
-    T operator*()
-    {
-      return m_pCurrentNode->_data;
+    bool operator==(const iterator &iterator) {
+      return m_pCurrentNode == iterator.m_pCurrentNode;
     }
 
+    T operator*() { return m_pCurrentNode->_data; }
+
   private:
-    const Node<T>* m_pCurrentNode;
+    const Node<T> *m_pCurrentNode;
+  };
+
+  class const_iterator {
+  public:
+    const_iterator() noexcept : m_pCurrentNode(m_spRoot) {}
+
+    const_iterator(const Node<T> *pNode) noexcept : m_pCurrentNode(pNode) {}
+
+    const_iterator &operator=(Node<T> *pNode) {
+      this->m_pCurrentNode = pNode;
+      return *this;
+    }
+
+    // Prefix ++ overload
+    const_iterator &operator++() {
+      if (m_pCurrentNode)
+        m_pCurrentNode = m_pCurrentNode->next;
+      return *this;
+    }
+
+    // Postfix ++ overload
+    const_iterator operator++(int) {
+      const_iterator iterator = *this;
+      ++*this;
+      return iterator;
+    }
+
+    bool operator!=(const const_iterator &iterator) const {
+      return m_pCurrentNode != iterator.m_pCurrentNode;
+    }
+
+    bool operator==(const const_iterator &iterator) const {
+      return m_pCurrentNode == iterator.m_pCurrentNode;
+    }
+
+    T operator*() const { return m_pCurrentNode->_data; }
+    T *operator->() const { return m_pCurrentNode; }
+
+  private:
+    const Node<T> *m_pCurrentNode;
   };
 
   LinkedList();
@@ -93,7 +126,7 @@ public:
   void pushFront(const T &data);
   void pushBack(const T &data);
 
-  void merge(LinkedList<T>& otherList);
+  void merge(LinkedList<T> &otherList);
 
   T get(const size_t &index) const;
   bool contains(const T &data) const;
@@ -117,17 +150,11 @@ public:
   size_t lastIndex() const;
   size_t indexOf(const T &data) const;
 
-  // Root of LinkedList wrapped in Iterator type 
-  Iterator begin()
-  {
-    return Iterator(head);
-  }
+  iterator begin() { return iterator(head); }
+  iterator end() { return iterator(nullptr); }
 
-  // End of LInkedList wrapped in Iterator type 
-  Iterator end()
-  {
-    return Iterator(nullptr);
-  }
+  const_iterator cbegin() const { return const_iterator(head); }
+  const_iterator cend() const { return const_iterator(nullptr); }
 
   std::string str() const;
 
@@ -495,9 +522,8 @@ template <typename T> void LinkedList<T>::pushBack(const T &data) {
   insert(data);
 }
 
-template <typename T> void LinkedList<T>::merge(LinkedList<T>& otherList) {
-  for (auto element : otherList)
-  {
+template <typename T> void LinkedList<T>::merge(LinkedList<T> &otherList) {
+  for (auto element : otherList) {
     insert(element);
   }
   otherList.clear();
