@@ -3,24 +3,34 @@
 
 #include "stdafx.h"
 #include <iostream>
-#include <Windows.h>
+
 #include "LinkedList.h"
 
 int main() {
-  int x, y;
+  try
+  {
+    
 
-  LinkedList<int> ll;
-  int veryLarge = 10000000;
-  for (int i = 0; i < veryLarge; i++) {
-    ll.insert(i);
+    LinkedList<int> ll;
+    ll.remove(0);
+
+    /*int veryLarge = 1;
+    for (int i = 0; i < veryLarge; i++) {
+      ll.insert(i);
+    }
+    ll.remove(5);
+    x = ll.get(1000);
+    ll.clear();
+
+    std::cout << "Press enter to close.\n";
+*/
+    std::cin.ignore();
   }
-  ll.remove(5);
-  x = ll.get(1000);
-  ll.clear();
-
-  std::cout << "Press enter to close.\n";
-
-  std::cin.ignore();
+  catch (const std::exception& e)
+  {
+    std::cout << e.what() << std::endl;
+  }
+  
   return 0;
 }
 
