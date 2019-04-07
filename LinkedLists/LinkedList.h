@@ -38,12 +38,63 @@ private:
   size_t _size;
 
 public:
+
+  class Iterator
+  {
+  public:
+    Iterator() noexcept :
+      m_pCurrentNode(m_spRoot) { }
+
+    Iterator(const Node<T>* pNode) noexcept :
+      m_pCurrentNode(pNode) { }
+
+    Iterator& operator=(Node<T>* pNode)
+    {
+      this->m_pCurrentNode = pNode;
+      return *this;
+    }
+
+    // Prefix ++ overload 
+    Iterator& operator++()
+    {
+      if (m_pCurrentNode)
+        m_pCurrentNode = m_pCurrentNode->next;
+      return *this;
+    }
+
+    // Postfix ++ overload 
+    Iterator operator++(int)
+    {
+      Iterator iterator = *this;
+      ++* this;
+      return iterator;
+    }
+
+    bool operator!=(const Iterator& iterator)
+    {
+      return m_pCurrentNode != iterator.m_pCurrentNode;
+    }
+
+    T operator*()
+    {
+      return m_pCurrentNode->_data;
+    }
+
+  private:
+    const Node<T>* m_pCurrentNode;
+  };
+
   LinkedList();
   ~LinkedList();
 
   void insert(const T &data);
   void insert(const size_t &index, const T &data);
   void insertAll(const std::initializer_list<T> &elements);
+  void pushFront(const T &data);
+  void pushBack(const T &data);
+
+  void merge(LinkedList<T>& otherList);
+
   T get(const size_t &index) const;
   bool contains(const T &data) const;
   void remove(const T &data);
@@ -51,6 +102,7 @@ public:
   void removeFromEnd();
   void removeFromBeginning();
   void remove(const size_t &index);
+
   void clear();
 
   // Sorting related
@@ -60,10 +112,23 @@ public:
   // Sorting related END
 
   bool isEmpty() const;
-  const size_t &size() const;
+  const size_t &size() const noexcept;
   size_t firstIndex() const;
   size_t lastIndex() const;
   size_t indexOf(const T &data) const;
+
+  // Root of LinkedList wrapped in Iterator type 
+  Iterator begin()
+  {
+    return Iterator(head);
+  }
+
+  // End of LInkedList wrapped in Iterator type 
+  Iterator end()
+  {
+    return Iterator(nullptr);
+  }
+
   std::string str() const;
 
   Node<T> &operator[](const size_t &index) const;
@@ -217,10 +282,13 @@ template <typename T> Node<T> *LinkedList<T>::operator[](const size_t &index) {
 
 template <typename T> void LinkedList<T>::remove(const T &data) {
   size_t indexOfData = indexOf(data);
-  if (indexOfData != std::string::npos) {
+  if (indexOfData == std::string::npos) {
+    throw PositionException("Element not found in list");
+  }
+
+  while (indexOfData != std::string::npos) {
     remove(indexOfData);
-  } else {
-    throw PositionException("List empty, nothing to remove");
+    indexOfData = indexOf(data);
   }
 }
 
@@ -294,7 +362,7 @@ template <typename T> bool LinkedList<T>::isEmpty() const {
   return size() == 0;
 }
 
-template <typename T> const size_t &LinkedList<T>::size() const {
+template <typename T> const size_t &LinkedList<T>::size() const noexcept {
   return _size;
 }
 
@@ -334,8 +402,8 @@ template <typename T> size_t LinkedList<T>::indexOf(const T &data) const {
   }
 
   Node<T> *node = head;
-
-  for (size_t indexOf = 0; indexOf < size(); ++indexOf) {
+  size_t listSize = size();
+  for (size_t indexOf = 0; indexOf < listSize; ++indexOf) {
     if (data == node->_data) {
       foundIndex = indexOf;
       break;
@@ -415,6 +483,23 @@ std::ostream &operator<<(std::ostream &out, const LinkedList<T> &list) {
     node = node->next;
   }
   out << ']';
-  node = nullptr;
+
   return out;
+}
+
+template <typename T> void LinkedList<T>::pushFront(const T &data) {
+  insert(firstIndex(), data);
+}
+
+template <typename T> void LinkedList<T>::pushBack(const T &data) {
+  insert(data);
+}
+
+template <typename T> void LinkedList<T>::merge(LinkedList<T>& otherList) {
+  for (auto element : otherList)
+  {
+    insert(element);
+  }
+  otherList.clear();
+  sort();
 }

@@ -39,6 +39,31 @@ public:
     Assert::AreEqual(expected, list.str());
   }
 
+  TEST_METHOD(TestRemoveAll2) {
+    LinkedList<int> list;
+    list.insert(1);
+    list.insert(2);
+    list.insert(1);
+    list.insert(3);
+    list.insert(5);
+    list.insert(1);
+
+    list.remove(1);
+
+    std::string expected("[2, 3, 5]");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestRemoveAll3) {
+    LinkedList<int> list;
+    list.insert(1);
+    list.insert(1);
+    
+    list.remove(1);
+
+    std::string expected("[]");
+    Assert::AreEqual(expected, list.str());
+  }
 
   TEST_METHOD(TestRemove1) {
     LinkedList<int> list;
@@ -78,7 +103,7 @@ public:
 
   TEST_METHOD(TestRemoveEmpty) {
     LinkedList<int> list;
-    Assert::ExpectException<std::exception>([&] {list.remove(3); });
+    Assert::ExpectException<PositionException>([&] {list.remove(3); });
   }
 
   TEST_METHOD(TestRemoveAt) {
@@ -203,7 +228,7 @@ public:
   TEST_METHOD(TestAddOutSideBoundsException) {
     LinkedList<int> list;
     size_t index = 1;
-    Assert::ExpectException<std::exception>([&] { list.insert(index, 666); });
+    Assert::ExpectException<PositionException>([&] { list.insert(index, 666); });
   }
 
   TEST_METHOD(TestOperatorSquare) {
@@ -360,6 +385,92 @@ public:
 
     Assert::AreEqual((size_t)0, list.size());
   }
+
+  TEST_METHOD(TestPushFront1) {
+    LinkedList<std::string> list;
+    list.insert("b");
+    list.insert("c");
+    list.pushFront("a");
+    
+    std::string expected("[a, b, c]");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestPushFront2) {
+    LinkedList<int> list;
+    list.insert(2);
+    list.insert(3);
+    list.pushFront(1);
+
+    std::string expected("[1, 2, 3]");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestPushBack1) {
+    LinkedList<int> list;
+    list.insert(1);
+    list.insert(3);
+    list.pushBack(2);
+
+    std::string expected("[1, 3, 2]");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestPushBack2) {
+    LinkedList<int> list;
+    list.insert(1);
+    list.insert(3);
+    list.pushBack(2);
+    list.pushBack(4);
+
+    std::string expected("[1, 3, 2, 4]");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestMerge1) {
+    LinkedList<int> list1;
+    list1.insert(1);
+    list1.insert(3);
+    
+    LinkedList<int> list2;
+    list2.insert(4);
+    list2.insert(2);
+
+    list1.merge(list2);
+    std::string expected("[1, 2, 3, 4]");
+    Assert::AreEqual(expected, list1.str());
+  }
+
+  TEST_METHOD(TestMerge2) {
+    LinkedList<std::string> list1;
+    list1.insert("1");
+    list1.insert("3");
+
+    LinkedList<std::string> list2;
+    list2.insert("4");
+    list2.insert("2");
+
+    list1.merge(list2);
+    std::string expected("[1, 2, 3, 4]");
+    Assert::AreEqual(expected, list1.str());
+  }
+
+  TEST_METHOD(TestMerge3) {
+    LinkedList<std::string> list1;
+    list1.insert("1");
+    list1.insert("3");
+
+    LinkedList<std::string> list2;
+    list2.insert("4");
+    list2.insert("2");
+
+    list1.merge(list2);
+
+    // "The container other becomes empty after the operation."
+    std::string expected("[]");
+    Assert::AreEqual(expected, list2.str());
+  }
+
 
   };
 }
