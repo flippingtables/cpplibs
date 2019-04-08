@@ -122,7 +122,7 @@ public:
 
   void insert(const T &data);
   void insert(const size_t &index, const T &data);
-  void insertAll(const std::initializer_list<T> &elements);
+  void insert(const std::initializer_list<T> &elements);
   void pushFront(const T &data);
   void pushBack(const T &data);
 
@@ -253,8 +253,8 @@ void LinkedList<T>::insert(const size_t &index, const T &data) {
 }
 
 template <typename T>
-void LinkedList<T>::insertAll(const std::initializer_list<T> &elements) {
-  for (T &element : elements) {
+void LinkedList<T>::insert(const std::initializer_list<T> &elements) {
+  for (auto &element : elements) {
     insert(element);
   }
 }
