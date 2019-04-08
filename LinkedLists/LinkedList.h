@@ -132,8 +132,8 @@ public:
   bool contains(const T &data) const;
   void remove(const T &data);
   void remove(const std::initializer_list<T> &elements);
-  void removeFromEnd();
-  void removeFromBeginning();
+  void pop_back();
+  void pop_front();
   void remove(const size_t &index);
 
   void clear();
@@ -326,10 +326,10 @@ void LinkedList<T>::remove(const std::initializer_list<T> &elements) {
   }
 }
 
-template <typename T> void LinkedList<T>::removeFromBeginning() {
+template <typename T> void LinkedList<T>::pop_front() {
   Node<T> *node = head;
   if (size() == 0) {
-    return;
+    throw PositionException("List empty, nothing to remove - pop_front");
   }
   head = head->next;
   if (head != nullptr) {
@@ -339,10 +339,10 @@ template <typename T> void LinkedList<T>::removeFromBeginning() {
   delete node;
 }
 
-template <typename T> void LinkedList<T>::removeFromEnd() {
+template <typename T> void LinkedList<T>::pop_back() {
   Node<T> *node = tail;
   if (size() == 0) {
-    return;
+    throw PositionException("List empty, nothing to remove - pop_back");
   }
   tail = tail->prev;
   if (tail != nullptr) {
@@ -363,9 +363,9 @@ template <typename T> void LinkedList<T>::remove(const size_t &index) {
   }
 
   if (i == 0) {
-    removeFromBeginning();
+    pop_front();
   } else if (node == tail) {
-    removeFromEnd();
+    pop_back();
   } else if (node != nullptr) {
     node->prev->next = node->next;
     node->next->prev = node->prev;
