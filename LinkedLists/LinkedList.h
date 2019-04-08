@@ -131,7 +131,7 @@ public:
   T get(const size_t &index) const;
   bool contains(const T &data) const;
   void remove(const T &data);
-  void removeAll(const std::initializer_list<T> &elements);
+  void remove(const std::initializer_list<T> &elements);
   void removeFromEnd();
   void removeFromBeginning();
   void remove(const size_t &index);
@@ -320,8 +320,8 @@ template <typename T> void LinkedList<T>::remove(const T &data) {
 }
 
 template <typename T>
-void LinkedList<T>::removeAll(const std::initializer_list<T> &elements) {
-  for (const T &element : elements) {
+void LinkedList<T>::remove(const std::initializer_list<T> &elements) {
+  for (auto &element : elements) {
     remove(element);
   }
 }

@@ -179,7 +179,7 @@ public:
     list.insert(4);
 
     std::initializer_list<int> arr = { 1,2,3,4 };
-    list.removeAll(arr);
+    list.remove(arr);
     std::string expected("[]");
 
     Assert::AreEqual(expected, list.str());    
