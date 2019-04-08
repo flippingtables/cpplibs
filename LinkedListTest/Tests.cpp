@@ -27,6 +27,19 @@ public:
     Assert::AreEqual(expected, list.str());
   }
 
+  TEST_METHOD(TestAddInitializerList1) {
+    LinkedList<int> list;
+    list.insert({ 1, 2, 3, 4 });
+    std::string expected("[1, 2, 3, 4]");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(TestAddInitializerList2) {
+    LinkedList<int> list;
+    list.insert({ false, false, false, true });
+    std::string expected("[0, 0, 0, 1]");
+    Assert::AreEqual(expected, list.str());
+  }
   TEST_METHOD(TestRemove) {
     LinkedList<int> list;
     list.insert(1);
