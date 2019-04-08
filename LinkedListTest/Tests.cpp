@@ -70,7 +70,7 @@ public:
     LinkedList<int> list;
     list.insert(1);
     list.insert(1);
-    
+
     list.remove(1);
 
     std::string expected("[]");
@@ -189,7 +189,7 @@ public:
     list.remove(arr);
     std::string expected("[]");
 
-    Assert::AreEqual(expected, list.str());    
+    Assert::AreEqual(expected, list.str());
   }
 
 
@@ -264,8 +264,8 @@ public:
     list.insert(666);
     list.insert(200);
     Node<int> n = *list[1];
-    Assert::IsTrue(n.prev->_data == 100);
-    Assert::IsTrue(n.next->_data == 200);
+    Assert::IsTrue(n.prev->data == 100);
+    Assert::IsTrue(n.next->data == 200);
   }
 
   TEST_METHOD(OperatorSquarePrevNULL) {
@@ -410,8 +410,8 @@ public:
     LinkedList<std::string> list;
     list.insert("b");
     list.insert("c");
-    list.pushFront("a");
-    
+    list.push_front("a");
+
     std::string expected("[a, b, c]");
     Assert::AreEqual(expected, list.str());
   }
@@ -420,7 +420,7 @@ public:
     LinkedList<int> list;
     list.insert(2);
     list.insert(3);
-    list.pushFront(1);
+    list.push_front(1);
 
     std::string expected("[1, 2, 3]");
     Assert::AreEqual(expected, list.str());
@@ -430,7 +430,7 @@ public:
     LinkedList<int> list;
     list.insert(1);
     list.insert(3);
-    list.pushBack(2);
+    list.push_back(2);
 
     std::string expected("[1, 3, 2]");
     Assert::AreEqual(expected, list.str());
@@ -440,8 +440,8 @@ public:
     LinkedList<int> list;
     list.insert(1);
     list.insert(3);
-    list.pushBack(2);
-    list.pushBack(4);
+    list.push_back(2);
+    list.push_back(4);
 
     std::string expected("[1, 3, 2, 4]");
     Assert::AreEqual(expected, list.str());
@@ -451,7 +451,7 @@ public:
     LinkedList<int> list1;
     list1.insert(1);
     list1.insert(3);
-    
+
     LinkedList<int> list2;
     list2.insert(4);
     list2.insert(2);
@@ -537,6 +537,61 @@ public:
     auto it = std::find(l.cbegin(), l.cend(), 3);
     bool isEqual = l.cend() != it;
     Assert::AreEqual(isEqual, true);
+  }
+
+  TEST_METHOD(FrontEmptyException) {
+    LinkedList<int> list;
+    Assert::ExpectException<PositionException>([&] { list.front(); });
+  }
+
+  TEST_METHOD(Front1) {
+    LinkedList<int> list;
+    list.insert(1);
+    list.insert(2);
+
+    Assert::AreEqual(1, list.front());
+  }
+
+  TEST_METHOD(Front2) {
+    LinkedList<std::string> list;
+    list.insert("1");
+    list.insert("2");
+    std::string expected("1");
+    Assert::AreEqual(expected, list.front());
+  }
+
+  TEST_METHOD(Front3) {
+    std::string expected = "1";
+    const LinkedList<std::string> list({expected, "2"});
+    auto front = list.front();
+    Assert::AreEqual(expected, front);
+  }
+
+  TEST_METHOD(BackEmptyException) {
+    LinkedList<int> list;
+    Assert::ExpectException<PositionException>([&] { list.front(); });
+  }
+
+  TEST_METHOD(Back1) {
+    LinkedList<int> list;
+    list.insert(1);
+    list.insert(2);
+    Assert::AreEqual(2, list.back());
+  }
+
+  TEST_METHOD(Back2) {
+    LinkedList<std::string> list;
+    list.insert("1");
+    list.insert("2");
+    std::string expected("2");
+    Assert::AreEqual(expected, list.back());
+  }
+
+  TEST_METHOD(Back3) {
+    std::string expected = "2";
+    const LinkedList<std::string> list({ "1", expected});
+    auto front = list.back();
+    Assert::AreEqual(expected, front);
   }
 
   };

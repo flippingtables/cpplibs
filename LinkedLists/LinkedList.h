@@ -16,7 +16,7 @@ template <typename T> class LinkedList;
 
 template <typename T> class Node {
 public:
-  T _data;
+  T data;
   Node<T> *next;
   Node<T> *prev;
   friend LinkedList<T>;
@@ -35,7 +35,7 @@ template <typename T> class LinkedList {
 private:
   Node<T> *head;
   Node<T> *tail;
-  size_t _size;
+  size_t my_size;
 
 public:
   class iterator {
@@ -71,7 +71,7 @@ public:
       return m_pCurrentNode == iterator.m_pCurrentNode;
     }
 
-    T operator*() { return m_pCurrentNode->_data; }
+    T operator*() { return m_pCurrentNode->data; }
 
   private:
     const Node<T> *m_pCurrentNode;
@@ -110,7 +110,7 @@ public:
       return m_pCurrentNode == iterator.m_pCurrentNode;
     }
 
-    T operator*() const { return m_pCurrentNode->_data; }
+    T operator*() const { return m_pCurrentNode->data; }
     T *operator->() const { return m_pCurrentNode; }
 
   private:
@@ -118,13 +118,15 @@ public:
   };
 
   LinkedList();
+  LinkedList(const std::initializer_list<T> &elements);
+
   ~LinkedList();
 
   void insert(const T &data);
   void insert(const size_t &index, const T &data);
   void insert(const std::initializer_list<T> &elements);
-  void pushFront(const T &data);
-  void pushBack(const T &data);
+  void push_front(const T &data);
+  void push_back(const T &data);
 
   void merge(LinkedList<T> &otherList);
 
@@ -144,7 +146,7 @@ public:
   void swap(const size_t &l, const size_t &r);
   // Sorting related END
 
-  bool isEmpty() const;
+  bool empty() const;
   const size_t &size() const noexcept;
   size_t firstIndex() const;
   size_t lastIndex() const;
@@ -156,13 +158,18 @@ public:
   const_iterator cbegin() const { return const_iterator(head); }
   const_iterator cend() const { return const_iterator(nullptr); }
 
-  std::string str() const;
+  T &front();
+  const T &front() const;
+  T &back();
+  const T &back() const;
 
   Node<T> &operator[](const size_t &index) const;
   Node<T> *operator[](const size_t &index);
 
   template <typename T>
   friend std::ostream &operator<<(std::ostream &, const LinkedList<T> &list);
+
+  std::string str() const;
 
 private:
   void _quickSort(Node<T> *l, Node<T> *h);
@@ -175,20 +182,20 @@ private:
 =================================
 */
 template <typename T>
-Node<T>::Node(const T &data) : _data(data), next(nullptr), prev(nullptr) {}
+Node<T>::Node(const T &data_) : data(data_), next(nullptr), prev(nullptr) {}
 
-template <typename T> inline Node<T> &Node<T>::operator=(const T &data) {
-  _data = data;
+template <typename T> inline Node<T> &Node<T>::operator=(const T &data_) {
+  data = data_;
   return *this;
 }
 
 template <typename T> Node<T> &Node<T>::operator=(const Node<T> &element) {
-  _data = element._data;
+  data = element.data;
   return *this;
 }
 
 template <typename T> Node<T> &Node<T>::operator=(const Node<T> *element) {
-  _data = element->_data;
+  data = element->data;
   return *this;
 }
 
@@ -204,21 +211,27 @@ std::ostream &operator<<(std::ostream &out, const Node<T> &node) {
 */
 
 template <typename T>
-LinkedList<T>::LinkedList() : head(nullptr), tail(nullptr), _size(0) {}
+LinkedList<T>::LinkedList() : head(nullptr), tail(nullptr), my_size(0) {}
+
+template <typename T>
+LinkedList<T>::LinkedList(const std::initializer_list<T> &elements)
+    : LinkedList() {
+  insert(elements);
+}
 
 template <typename T> LinkedList<T>::~LinkedList() { clear(); }
 
 template <typename T> void LinkedList<T>::insert(const T &data) {
   Node<T> *newNode = new Node<T>(data);
 
-  if (!isEmpty()) {
+  if (!empty()) {
     newNode->prev = tail;
     tail->next = newNode;
     tail = newNode;
   } else {
     head = tail = newNode;
   }
-  ++_size;
+  ++my_size;
 }
 
 template <typename T>
@@ -227,7 +240,7 @@ void LinkedList<T>::insert(const size_t &index, const T &data) {
     throw PositionException("Index out of bounds");
   }
 
-  if (isEmpty()) {
+  if (empty()) {
     insert(data);
     return;
   }
@@ -249,7 +262,7 @@ void LinkedList<T>::insert(const size_t &index, const T &data) {
   if (index == size() - 1) {
     tail = newNode->next;
   }
-  ++_size;
+  ++my_size;
 }
 
 template <typename T>
@@ -269,13 +282,13 @@ template <typename T> T LinkedList<T>::get(const size_t &index) const {
     node = node->next;
   }
 
-  return node->_data;
+  return node->data;
 }
 
 template <typename T> bool LinkedList<T>::contains(const T &data) const {
   Node<T> *node = head;
   for (size_t i = 0; i < size(); ++i) {
-    if (node->_data == data) {
+    if (node->data == data) {
       return true;
     }
     node = node->next;
@@ -335,7 +348,7 @@ template <typename T> void LinkedList<T>::pop_front() {
   if (head != nullptr) {
     head->prev = nullptr;
   }
-  --_size;
+  --my_size;
   delete node;
 }
 
@@ -348,7 +361,7 @@ template <typename T> void LinkedList<T>::pop_back() {
   if (tail != nullptr) {
     tail->next = nullptr;
   }
-  --_size;
+  --my_size;
   delete node;
 }
 
@@ -369,7 +382,7 @@ template <typename T> void LinkedList<T>::remove(const size_t &index) {
   } else if (node != nullptr) {
     node->prev->next = node->next;
     node->next->prev = node->prev;
-    --_size;
+    --my_size;
     delete node;
   }
 }
@@ -380,23 +393,21 @@ template <typename T> void LinkedList<T>::clear() {
     Node<T> *next = current->next;
     delete current;
     current = next;
-    --_size;
+    --my_size;
   }
   head = tail = nullptr;
 }
 
-template <typename T> bool LinkedList<T>::isEmpty() const {
-  return size() == 0;
-}
+template <typename T> bool LinkedList<T>::empty() const { return size() == 0; }
 
 template <typename T> const size_t &LinkedList<T>::size() const noexcept {
-  return _size;
+  return my_size;
 }
 
 template <typename T> size_t LinkedList<T>::firstIndex() const { return 0; }
 
 template <typename T> size_t LinkedList<T>::lastIndex() const {
-  if (isEmpty()) {
+  if (empty()) {
     throw PositionException("List empty, no last Index");
   }
   return size() - 1;
@@ -409,9 +420,9 @@ template <typename T> std::string LinkedList<T>::str() const {
   ss << '[';
   while (node != nullptr) {
     if (node->next != nullptr) {
-      ss << node->_data << ", ";
+      ss << node->data << ", ";
     } else {
-      ss << node->_data;
+      ss << node->data;
     }
 
     node = node->next;
@@ -424,14 +435,14 @@ template <typename T> std::string LinkedList<T>::str() const {
 template <typename T> size_t LinkedList<T>::indexOf(const T &data) const {
   size_t foundIndex = std::string::npos;
 
-  if (isEmpty()) {
+  if (empty()) {
     return foundIndex;
   }
 
   Node<T> *node = head;
   size_t listSize = size();
   for (size_t indexOf = 0; indexOf < listSize; ++indexOf) {
-    if (data == node->_data) {
+    if (data == node->data) {
       foundIndex = indexOf;
       break;
     }
@@ -471,7 +482,7 @@ Node<T> *LinkedList<T>::partition(Node<T> *l, Node<T> *h) {
 
   // Similar to "for (int j = l; j <= h- 1; j++)"
   for (Node<T> *j = l; j != h; j = j->next) {
-    if (j->_data <= pivot->_data) {
+    if (j->data <= pivot->data) {
       // Similar to i++ for array
       i = (i == nullptr) ? l : i->next;
 
@@ -502,9 +513,9 @@ std::ostream &operator<<(std::ostream &out, const LinkedList<T> &list) {
   out << '[';
   while (node != nullptr) {
     if (node->next != nullptr) {
-      out << node->_data << ", ";
+      out << node->data << ", ";
     } else {
-      out << node->_data;
+      out << node->data;
     }
 
     node = node->next;
@@ -514,11 +525,11 @@ std::ostream &operator<<(std::ostream &out, const LinkedList<T> &list) {
   return out;
 }
 
-template <typename T> void LinkedList<T>::pushFront(const T &data) {
+template <typename T> void LinkedList<T>::push_front(const T &data) {
   insert(firstIndex(), data);
 }
 
-template <typename T> void LinkedList<T>::pushBack(const T &data) {
+template <typename T> void LinkedList<T>::push_back(const T &data) {
   insert(data);
 }
 
@@ -528,4 +539,32 @@ template <typename T> void LinkedList<T>::merge(LinkedList<T> &otherList) {
   }
   otherList.clear();
   sort();
+}
+
+template <typename T> T &LinkedList<T>::front() {
+  if (empty()) {
+    throw PositionException("List empty, no element at front - front()");
+  }
+  return head->data;
+}
+
+template <typename T> const T &LinkedList<T>::front() const {
+  if (empty()) {
+    throw PositionException("List empty, no element at front - front()");
+  }
+  return head->data;
+}
+
+template <typename T> T &LinkedList<T>::back() {
+  if (empty()) {
+    throw PositionException("List empty, no element at front - back()");
+  }
+  return tail->data;
+}
+
+template <typename T> const T &LinkedList<T>::back() const {
+  if (empty()) {
+    throw PositionException("List empty, no element at front - back()");
+  }
+  return tail->data;
 }
