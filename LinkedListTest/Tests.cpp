@@ -628,5 +628,16 @@ public:
     Assert::AreEqual(std::string("[1]"), list.str());
   }
 
+  TEST_METHOD(Unique4) {
+    LinkedList<int> list({ 1 });
+    list.unique();
+    Assert::AreEqual(std::string("[1]"), list.str());
+  }
+  
+  TEST_METHOD(Unique5) {
+    LinkedList<int> list({  });
+    Assert::ExpectException<PositionException>([&] { list.unique(); });
+  }
+
   };
 }
