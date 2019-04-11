@@ -15,15 +15,21 @@ public:
 template <typename T> class LinkedList;
 
 template <typename T> class Node {
+private:
+  using Nodeptr = Node<T> *;
+
 public:
   T data;
-  Node<T> *next;
-  Node<T> *prev;
+  Nodeptr next;
+  Nodeptr prev;
   friend LinkedList<T>;
   Node(const T &data);
+  Node() = delete;
   Node<T> &operator=(const T &data);
   Node<T> &operator=(const Node<T> &element);
   Node<T> &operator=(const Node<T> *element);
+
+  bool operator==(const Node<T> &rhs) { return data == rhs.data; }
 
   template <typename T>
   friend std::ostream &operator<<(std::ostream &, const Node<T> &node);
@@ -33,8 +39,11 @@ public:
 
 template <typename T> class LinkedList {
 private:
-  Node<T> *head;
-  Node<T> *tail;
+  using Nodeptr = Node<T> *;
+
+private:
+  Nodeptr head;
+  Nodeptr tail;
   size_t my_size;
 
 public:
@@ -134,9 +143,14 @@ public:
   bool contains(const T &data) const;
   void remove(const T &data);
   void remove(const std::initializer_list<T> &elements);
+  void remove(const size_t &index);
+
   void pop_back();
   void pop_front();
-  void remove(const size_t &index);
+
+  void erase(Nodeptr toRemove); // NON STL erase
+
+  void unique();
 
   void clear();
 
@@ -387,6 +401,33 @@ template <typename T> void LinkedList<T>::remove(const size_t &index) {
   }
 }
 
+template <typename T> void LinkedList<T>::erase(Nodeptr toRemove) {
+  if (!toRemove) {
+    return;
+  }
+  Nodeptr node = head;
+  size_t i;
+  size_t siz = size();
+  for (i = 0; i < siz; ++i) {
+
+    if (node == toRemove) {
+      break;
+    }
+    node = node->next;
+  }
+
+  if (node == head) {
+    pop_front();
+  } else if (node == tail) {
+    pop_back();
+  } else if (node != nullptr) {
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+    --my_size;
+    delete node;
+  }
+}
+
 template <typename T> void LinkedList<T>::clear() {
   Node<T> *current = head;
   while (current) {
@@ -567,4 +608,31 @@ template <typename T> const T &LinkedList<T>::back() const {
     throw PositionException("List empty, no element at front - back()");
   }
   return tail->data;
+}
+
+template <typename T> void LinkedList<T>::unique() {
+  if (empty()) {
+    throw PositionException("List empty, no element to remove - unique()");
+  }
+
+  Nodeptr first = head;
+  Nodeptr last = tail;
+  Nodeptr next = first;
+
+  while (next != last) {
+    next = next->next;
+    if (!next) {
+      break;
+    }
+
+    bool eq = first == next;
+    bool neq = first == next;
+    if (*first == *next) {
+
+      erase(next);
+      next = first;
+    } else {
+      first = next;
+    }
+  }
 }

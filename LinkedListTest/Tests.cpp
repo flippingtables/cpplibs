@@ -604,6 +604,29 @@ public:
     auto front = list.back();
     Assert::AreEqual(expected, front);
   }
+  
+  TEST_METHOD(Unique0) {
+    LinkedList<int> list({ 1, 1 });
+    list.unique();
+    Assert::AreEqual(std::string("[1]"), list.str());
+  }
+  TEST_METHOD(Unique1) {
+    LinkedList<int> list({ 1, 2, 2, 3, 3, 2, 1, 1, 2});
+    list.unique();
+    Assert::AreEqual(std::string("[1, 2, 3, 2, 1, 2]"), list.str());
+  }
+
+  TEST_METHOD(Unique2) {
+    LinkedList<int> list({ 1, 2, 2, 1, 2, 2, 1, 1, 2 });
+    list.unique();
+    Assert::AreEqual(std::string("[1, 2, 1, 2, 1, 2]"), list.str());
+  }
+
+  TEST_METHOD(Unique3) {
+    LinkedList<int> list({ 1, 1, 1 });
+    list.unique();
+    Assert::AreEqual(std::string("[1]"), list.str());
+  }
 
   };
 }
