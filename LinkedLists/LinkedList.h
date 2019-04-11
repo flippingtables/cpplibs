@@ -388,32 +388,12 @@ template <typename T> void LinkedList<T>::remove(const size_t &index) {
   for (i = 0; i < index; ++i) {
     node = node->next;
   }
-
-  if (i == 0) {
-    pop_front();
-  } else if (node == tail) {
-    pop_back();
-  } else if (node != nullptr) {
-    node->prev->next = node->next;
-    node->next->prev = node->prev;
-    --my_size;
-    delete node;
-  }
+  erase(node);
 }
 
-template <typename T> void LinkedList<T>::erase(Nodeptr toRemove) {
-  if (!toRemove) {
+template <typename T> void LinkedList<T>::erase(Nodeptr node) {
+  if (!node) {
     return;
-  }
-  Nodeptr node = head;
-  size_t i;
-  size_t siz = size();
-  for (i = 0; i < siz; ++i) {
-
-    if (node == toRemove) {
-      break;
-    }
-    node = node->next;
   }
 
   if (node == head) {
@@ -432,9 +412,8 @@ template <typename T> void LinkedList<T>::clear() {
   Node<T> *current = head;
   while (current) {
     Node<T> *next = current->next;
-    delete current;
+    erase(current);
     current = next;
-    --my_size;
   }
   head = tail = nullptr;
 }
