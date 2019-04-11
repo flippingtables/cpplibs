@@ -625,10 +625,7 @@ template <typename T> void LinkedList<T>::unique() {
       break;
     }
 
-    bool eq = first == next;
-    bool neq = first == next;
     if (*first == *next) {
-
       erase(next);
       next = first;
     } else {
