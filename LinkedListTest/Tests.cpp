@@ -39,19 +39,8 @@ public:
     std::string expected("[0, 0, 0, 1]");
     Assert::AreEqual(expected, list.str());
   }
-  TEST_METHOD(Remove) {
-    LinkedList<int> list;
-    list.insert(1);
-    list.insert(2);
-    list.insert(3);
-    list.insert(4);
-
-    list.remove(3);
-    std::string expected("[1, 2, 4]");
-    Assert::AreEqual(expected, list.str());
-  }
-
-  TEST_METHOD(RemoveAll2) {
+  
+ TEST_METHOD(RemoveAll2) {
     LinkedList<int> list;
     list.insert(1);
     list.insert(2);
@@ -79,6 +68,28 @@ public:
 
   TEST_METHOD(Remove1) {
     LinkedList<int> list;
+    list.insert(1);
+    list.insert(2);
+    list.insert(3);
+    list.insert(4);
+
+    list.remove(3);
+    std::string expected("[1, 2, 4]");
+    Assert::AreEqual(expected, list.str());
+  }
+
+  TEST_METHOD(Remove2) {
+    LinkedList<int> list;
+    list.insert(1);
+    list.insert(1);
+    list.insert(2);
+
+    list.remove(1);
+    std::string expected("[2]");
+    Assert::AreEqual(expected, list.str());
+  }
+  TEST_METHOD(Remove3) {
+    LinkedList<int> list;
     list.insert(0);
     list.insert(1);
     list.remove((size_t)0);
@@ -86,7 +97,7 @@ public:
   }
 
 
-  TEST_METHOD(Remove2) {
+  TEST_METHOD(Remove4) {
     LinkedList<int> list;
     list.insert(0);
     list.insert(1);
@@ -94,19 +105,19 @@ public:
     Assert::AreEqual((size_t)1, list.size());
   }
 
-  TEST_METHOD(Remove3) {
+  TEST_METHOD(Remove5) {
     LinkedList<int> list;
     list.remove((size_t)0);
     Assert::AreEqual((size_t)0, list.size());
   }
 
-  TEST_METHOD(Remove4) {
+  TEST_METHOD(Remove6) {
     LinkedList<int> list;
     list.remove((size_t)2);
     Assert::AreEqual((size_t)0, list.size());
   }
 
-  TEST_METHOD(Remove5) {
+  TEST_METHOD(Remove7) {
     LinkedList<int> list;
     list.insert(0);
     list.remove((size_t)2);
